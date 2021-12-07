@@ -28,6 +28,6 @@ function exec() {
   const ast = parser.parse(program);
   console.log(JSON.stringify(ast, null, 2));
 }
-// exec();
+exec();
 
 console.log("- All tests passed successfully -");
