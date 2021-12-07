@@ -2,6 +2,8 @@
 
 we are building an Abstract Syntax Tree using a recursive descent parser
 
-# Usefull tools
+## Usefull Tools
 
-https://astexplorer.net/
+[online regex editor](https://regex101.com/)
+
+[AST Explorer](https://astexplorer.net/)
