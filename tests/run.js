@@ -1,6 +1,6 @@
 const { Parser } = require("../parser.js");
 const parser = new Parser();
-const program = "123abc";
+const program = "  123  ";
 // const program = `'hello'`;
 // const program = `"hello"`;
 console.log("Parsing program:", program);

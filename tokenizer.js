@@ -1,6 +1,15 @@
+const Spec = [
+  [/^\s+/, null], // skip whitespace
+  [/^\/\/.*/, null], // skip comments // some text
+  [/^\/\*[\s\S]*?\*\//, null], // skip comments /* some text */
+  [/^\d+/, "NUMBER"],
+  [/^"\D+"/, "STRING"],
+  [/^'\D+'/, "STRING"],
+];
+
 class Tokenizer {
   init(string) {
-    this._string = new String(string);
+    this._string = string;
     this._cursor = 0;
   }
 
@@ -17,40 +26,26 @@ class Tokenizer {
 
     const subString = this._string.slice(this._cursor);
 
-    // numbers
-    let match = subString.match(/^\d+/);
-    if (match !== null) {
-      this._cursor += match[0].lenght;
+    for (const [expression, tokenType] of Spec) {
+      const tokenValue = this._getMatch(expression, subString);
+
+      if (tokenValue == null) continue;
+      if (tokenType == null) return this.getNextToken(); // keep going if whitespace
 
       return {
-        type: "NUMBER",
-        value: match[0],
+        type: tokenType,
+        value: tokenValue,
       };
     }
 
-    // strings
-    match = subString.match(/^"\D+"/);
-    if (match !== null) {
-      this._cursor += match[0].lenght;
+    throw new SyntaxError(`Tokenizer: unexpected token "${subString[0]}"`);
+  }
 
-      return {
-        type: "STRING",
-        value: match[0],
-      };
-    }
-
-    // strings
-    match = subString.match(/^'\D+'/);
-    if (match !== null) {
-      this._cursor += match[0].lenght;
-
-      return {
-        type: "STRING",
-        value: match[0],
-      };
-    }
-
-    return null;
+  _getMatch(expression, subString) {
+    const match = expression.exec(subString);
+    if (match == null) return null;
+    this._cursor += match[0].length;
+    return match[0];
   }
 }
 
