@@ -30,7 +30,7 @@ class Tokenizer {
       const tokenValue = this._getMatch(expression, subString);
 
       if (tokenValue == null) continue;
-      if (tokenType == null) return this.getNextToken(); // keep going if whitespace
+      if (tokenType == null) return this.getNextToken();
 
       return {
         type: tokenType,
