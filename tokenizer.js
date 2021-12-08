@@ -3,6 +3,8 @@ const Spec = [
   [/^\/\/.*/, null], // skip comments // some text
   [/^\/\*[\s\S]*?\*\//, null], // skip comments /* some text */
   [/^\;/, ";"],
+  [/^\{/, "{"],
+  [/^\}/, "}"],
   [/^\d+/, "NUMBER"],
   [/^"[^"]*"/, "STRING"],
   [/^'[^']*'/, "STRING"],

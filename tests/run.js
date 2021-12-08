@@ -1,8 +1,9 @@
-const { Parser } = require("../parser.js");
+const { Parser } = require("../parser");
 const assert = require("assert");
 const tests = [
-  require("./literals-tests.js"),
+  require("./literals-tests"),
   require("./statement-list-test"),
+  require("./block-test"),
 ];
 
 const parser = new Parser();
@@ -10,7 +11,7 @@ const parser = new Parser();
 console.log("\n---- Running tests \n");
 
 // test all literals in file literals-tests
-function testFunc(program, expected) {
+function testFunc(program, expected, id) {
   const ast = parser.parse(program);
   assert.deepEqual(ast, expected);
 }

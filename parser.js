@@ -26,19 +26,46 @@ class Parser {
   /**
    * Create a list of statements from the input program
    */
-  StatementList() {
+  StatementList(stopLookahead = null) {
     const statementList = [this.Statement()];
-    while (this._lookahead != null) {
+    while (this._lookahead != null && this._lookahead.type !== stopLookahead) {
       statementList.push(this.Statement());
     }
 
     return statementList;
   }
 
+  /**
+   * Statement. Define what type of statement we are dealing with
+   */
   Statement() {
-    return this.ExpressionStatement();
+    switch (this._lookahead.type) {
+      case "{":
+        return this.BlockStatement();
+
+      default:
+        return this.ExpressionStatement();
+    }
   }
 
+  /**
+   * BlockStatement. get a list of objects in a block
+   * ex. {"some string"};
+   */
+  BlockStatement() {
+    this._eat("{");
+    const body = this._lookahead.type !== "}" ? this.StatementList("}") : [];
+    this._eat("}");
+    return {
+      type: "BlockStatement",
+      body: body,
+    };
+  }
+
+  /**
+   * ExpressionStatement. handles the object that contains the literals
+   * ex. "some string";
+   */
   ExpressionStatement() {
     const expression = this.Expression();
     this._eat(";");
@@ -53,6 +80,10 @@ class Parser {
     return this.Literal();
   }
 
+  /**
+   * Literal. define what type of literal we are dealing with
+   * ex. "string" or 42
+   */
   Literal() {
     switch (this._lookahead.type) {
       case "NUMBER":
@@ -61,7 +92,9 @@ class Parser {
         return this.StringLiteral();
 
       default:
-        throw new SyntaxError("Literal: unexpected literal production");
+        throw new SyntaxError(
+          `Literal: unexpected literal production. got: ${this._lookahead.type}`
+        );
     }
   }
 
@@ -81,6 +114,9 @@ class Parser {
     };
   }
 
+  /**
+   * validate the lookahead token and move lookahead to the next token.
+   */
   _eat(tokentype) {
     const token = this._lookahead;
 
