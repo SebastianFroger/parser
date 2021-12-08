@@ -4,30 +4,31 @@ const tests = [require("./literals-tests.js")];
 
 const parser = new Parser();
 
+console.log("\n---- Running tests \n");
+
 // test all literals in file literals-tests
-function test(program, expected) {
+function testFunc(program, expected) {
   const ast = parser.parse(program);
   assert.deepEqual(ast, expected);
 }
-
-tests.forEach((testRun) => testRun(test));
+//tests.forEach((testObject) => testObject(testFunc));
 
 // this will run when file is called manually in terminal
 function exec() {
   const program = `
-        /** 
-         * comment
-         */
-        "hello";
-        'hello';
+      /** 
+       * comment
+       */
+      "hello";
+      'hello2';
 
-        // other comment
-        42;
-    `;
+      // other comment
+      42;
+  `;
 
   const ast = parser.parse(program);
   console.log(JSON.stringify(ast, null, 2));
 }
 exec();
 
-console.log("- All tests passed successfully -");
+console.log("\n---- All tests passed successfully \n");
