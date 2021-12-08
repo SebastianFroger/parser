@@ -2,27 +2,42 @@ module.exports = (test) => {
   /**
    * test objects with the inut, and the expected returned program and literal
    */
-  test("42", {
+  test("42;", {
     type: "Program",
-    body: {
-      type: "NumericLiteral",
-      value: 42,
-    },
+    body: [
+      {
+        type: "ExpressionStatement",
+        value: {
+          type: "NumericLiteral",
+          value: 42,
+        },
+      },
+    ],
   });
 
-  test('"hello"', {
+  test('"hello";', {
     type: "Program",
-    body: {
-      type: "StringLiteral",
-      value: "hello",
-    },
+    body: [
+      {
+        type: "ExpressionStatement",
+        value: {
+          type: "StringLiteral",
+          value: "hello",
+        },
+      },
+    ],
   });
 
-  test("'hello'", {
+  test("'hello';", {
     type: "Program",
-    body: {
-      type: "StringLiteral",
-      value: "hello",
-    },
+    body: [
+      {
+        type: "ExpressionStatement",
+        value: {
+          type: "StringLiteral",
+          value: "hello",
+        },
+      },
+    ],
   });
 };
