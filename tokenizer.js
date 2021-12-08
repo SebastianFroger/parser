@@ -4,8 +4,8 @@ const Spec = [
   [/^\/\*[\s\S]*?\*\//, null], // skip comments /* some text */
   [/^\;/, ";"],
   [/^\d+/, "NUMBER"],
-  [/^"\D+"/, "STRING"],
-  [/^'\D+'/, "STRING"],
+  [/^"[^"]*"/, "STRING"],
+  [/^'[^']*'/, "STRING"],
 ];
 
 class Tokenizer {
