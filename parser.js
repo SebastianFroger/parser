@@ -85,6 +85,55 @@ class Parser {
   }
 
   Expression() {
+    return this.AdditiveExpression();
+  }
+
+  /**
+   * AdditiveExpression
+   */
+  AdditiveExpression() {
+    let left = this.MultiplicativeExpression();
+
+    while (this._lookahead.type === "ADDITIVE_OPERATOR") {
+      const operator = this._eat("ADDITIVE_OPERATOR");
+      const right = this.MultiplicativeExpression();
+
+      left = {
+        type: "BinaryExpression",
+        operator,
+        left,
+        right,
+      };
+    }
+
+    return left;
+  }
+
+  /**
+   * MultiplicativeExpression
+   */
+  MultiplicativeExpression() {
+    let left = this.PrimaryExpression();
+
+    while (this._lookahead.type === "MULTIPLICATIVE_OPERATOR") {
+      const operator = this._eat("MULTIPLICATIVE_OPERATOR").value;
+      const right = this.PrimaryExpression();
+
+      left = {
+        type: "BinaryExpression",
+        operator,
+        left,
+        right,
+      };
+    }
+
+    return left;
+  }
+
+  /**
+   * Primary Expression
+   */
+  PrimaryExpression() {
     return this.Literal();
   }
 
