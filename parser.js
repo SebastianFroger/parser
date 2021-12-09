@@ -40,12 +40,20 @@ class Parser {
    */
   Statement() {
     switch (this._lookahead.type) {
+      case ";":
+        return this.EmptyStatement();
       case "{":
         return this.BlockStatement();
-
       default:
         return this.ExpressionStatement();
     }
+  }
+
+  EmptyStatement() {
+    this._eat(";");
+    return {
+      type: "EmptyStatement",
+    };
   }
 
   /**
@@ -53,7 +61,7 @@ class Parser {
    * ex. {"some string"};
    */
   BlockStatement() {
-    this._eat("{");
+    this._eat("{"); // ignore the backet and move the lookahead forward to next token
     const body = this._lookahead.type !== "}" ? this.StatementList("}") : [];
     this._eat("}");
     return {
