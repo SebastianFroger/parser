@@ -13,7 +13,7 @@ const parser = new Parser();
 // this will run when file is called manually in terminal
 function exec() {
   const program = `
-  42 + 13 + 12;
+  (2 + 2) * 2;
   `;
 
   const ast = parser.parse(program);
@@ -30,6 +30,6 @@ function testFunc(program, expected, id) {
   assert.deepEqual(ast, expected);
 }
 
-console.log("\n---- Running files tests \n");
+console.log("---- Running files tests");
 tests.forEach((testObject) => testObject(testFunc));
-console.log("\n---- All tests passed successfully \n");
+console.log("---- All tests passed successfully");

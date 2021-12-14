@@ -90,34 +90,39 @@ class Parser {
 
   /**
    * AdditiveExpression
+   * if all tokens are additive return the binaryexpression
+   * else see if it's a multiplication
    */
   AdditiveExpression() {
-    let left = this.MultiplicativeExpression();
-
-    while (this._lookahead.type === "ADDITIVE_OPERATOR") {
-      const operator = this._eat("ADDITIVE_OPERATOR");
-      const right = this.MultiplicativeExpression();
-
-      left = {
-        type: "BinaryExpression",
-        operator,
-        left,
-        right,
-      };
-    }
-
-    return left;
+    return this._BinaryExpression(
+      "MultiplicativeExpression",
+      "ADDITIVE_OPERATOR"
+    );
   }
 
   /**
    * MultiplicativeExpression
+   * if all tokens are multiplication return the binaryexpression
+   * else see if it's a primary expression
    */
   MultiplicativeExpression() {
-    let left = this.PrimaryExpression();
+    return this._BinaryExpression(
+      "PrimaryExpression",
+      "MULTIPLICATIVE_OPERATOR"
+    );
+  }
 
-    while (this._lookahead.type === "MULTIPLICATIVE_OPERATOR") {
-      const operator = this._eat("MULTIPLICATIVE_OPERATOR").value;
-      const right = this.PrimaryExpression();
+  /**
+   * Generic _BinaryExpression
+   * if all tokens are operatorToken return the binaryexpression
+   * else call the next expressiontype to check
+   */
+  _BinaryExpression(builderName, operatorToken) {
+    let left = this[builderName](); // call a function by name
+
+    while (this._lookahead.type === operatorToken) {
+      const operator = this._eat(operatorToken).value;
+      const right = this[builderName]();
 
       left = {
         type: "BinaryExpression",
@@ -131,10 +136,27 @@ class Parser {
   }
 
   /**
-   * Primary Expression
+   * Primary Expression in () or the literal
+   * define what type of expression
    */
   PrimaryExpression() {
-    return this.Literal();
+    switch (this._lookahead.type) {
+      case "(":
+        return this.ParenthesizedExpression();
+      default:
+        return this.Literal();
+    }
+  }
+
+  /**
+   * ParenthesizedExpression
+   * ignore the () and get the expression inside the ()
+   */
+  ParenthesizedExpression() {
+    this._eat("(");
+    const expression = this.Expression();
+    this._eat(")");
+    return expression;
   }
 
   /**
