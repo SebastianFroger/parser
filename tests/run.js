@@ -5,6 +5,7 @@ const tests = [
   require("./statement-list-test"),
   require("./block-test"),
   require("./empty-statement-test"),
+  require("./assignment-test"),
   // require("./math-test"),
 ];
 
@@ -13,7 +14,7 @@ const parser = new Parser();
 // this will run when file is called manually in terminal
 function exec() {
   const program = `
-  (2 + 2) * 2;
+  x = 2;
   `;
 
   const ast = parser.parse(program);

@@ -1,15 +1,39 @@
 const Spec = [
-  [/^\s+/, null], // skip whitespace
-  [/^\/\/.*/, null], // skip comments // some text
-  [/^\/\*[\s\S]*?\*\//, null], // skip comments /* some text */
+  /**
+   * NOTE:
+   * the order of the specs mater due to the way regex finds symbols
+   * example: both w and s can find numbers
+   */
+
+  // whitespace
+  [/^\s+/, null],
+
+  // comments /* */ and //
+  [/^\/\/.*/, null],
+  [/^\/\*[\s\S]*?\*\//, null],
+
+  // symbols and delimiters ;, {}, ()
   [/^\;/, ";"],
   [/^\{/, "{"],
   [/^\}/, "}"],
   [/^\(/, "("],
   [/^\)/, ")"],
+
+  // literals numbers
+  [/^\d+/, "NUMBER"],
+
+  // Identifiers variableName =
+  [/^\w+/, "IDENTIFIER"],
+
+  // Assignment operators =, *=, /=, +=, -=
+  [/^\=/, "SIMPLE_ASSIGNMENT"],
+  [/^[\*\/\+\-]=/, "COMPLEX_ASSIGNMENT"], //
+
+  // math operators +, -, *, /
   [/^[+\-]/, "ADDITIVE_OPERATOR"],
   [/^[*\/]/, "MULTIPLICATIVE_OPERATOR"],
-  [/^\d+/, "NUMBER"],
+
+  // literals strings
   [/^"[^"]*"/, "STRING"],
   [/^'[^']*'/, "STRING"],
 ];

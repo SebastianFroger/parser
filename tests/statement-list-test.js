@@ -18,21 +18,21 @@ module.exports = (test) => {
       body: [
         {
           type: "ExpressionStatement",
-          value: {
+          expression: {
             type: "StringLiteral",
             value: "hello",
           },
         },
         {
           type: "ExpressionStatement",
-          value: {
+          expression: {
             type: "StringLiteral",
             value: "hello2",
           },
         },
         {
           type: "ExpressionStatement",
-          value: {
+          expression: {
             type: "NumericLiteral",
             value: 42,
           },
