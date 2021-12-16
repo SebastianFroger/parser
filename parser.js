@@ -44,13 +44,15 @@ class Parser {
         return this.EmptyStatement();
       case "{":
         return this.BlockStatement();
+      case "let":
+        return this.VariableStatement();
       default:
         return this.ExpressionStatement();
     }
   }
 
   EmptyStatement() {
-    this._getNextToken(";");
+    this._eat(";");
     return {
       type: "EmptyStatement",
     };
@@ -61,9 +63,9 @@ class Parser {
    * ex. {"some string"};
    */
   BlockStatement() {
-    this._getNextToken("{"); // ignore the backet and move the lookahead forward to next token
+    this._eat("{"); // ignore the backet and move the lookahead forward to next token
     const body = this._nextToken.type !== "}" ? this.StatementList("}") : [];
-    this._getNextToken("}");
+    this._eat("}");
     return {
       type: "BlockStatement",
       body: body,
@@ -76,12 +78,61 @@ class Parser {
    */
   ExpressionStatement() {
     const expression = this.Expression();
-    this._getNextToken(";");
+    this._eat(";");
 
     return {
       type: "ExpressionStatement",
       expression,
     };
+  }
+
+  /**
+   * Variable statement
+   */
+  VariableStatement() {
+    this._eat("let");
+    const declarations = this.VariableDeclarationList();
+    this._eat(";");
+
+    return {
+      type: "VariableStatement",
+      declarations,
+    };
+  }
+
+  VariableDeclarationList() {
+    const declarations = [];
+    do {
+      declarations.push(this.VariableDeclaration());
+    } while (this._nextToken.type === "," && this._eat(","));
+
+    return declarations;
+  }
+
+  /**
+   * variable declarations
+   */
+  VariableDeclaration() {
+    const id = this.Identifier();
+
+    const init =
+      this._nextToken.type !== ";" && this._nextToken.type !== ","
+        ? this.VariableInitializer()
+        : null;
+
+    return {
+      type: "VariableDeclaration",
+      id,
+      init,
+    };
+  }
+
+  /**
+   * VariableInitializer
+   */
+  VariableInitializer() {
+    this._eat("SIMPLE_ASSIGNMENT");
+    return this.AssignmentExpression();
   }
 
   Expression() {
@@ -109,7 +160,7 @@ class Parser {
 
   // Identifier
   Identifier() {
-    const name = this._getNextToken("IDENTIFIER").value;
+    const name = this._eat("IDENTIFIER").value;
     return {
       type: "Identifier",
       name,
@@ -132,10 +183,10 @@ class Parser {
   // AssignmentOperator
   AssignmentOperator() {
     if (this._nextToken.type === "SIMPLE_ASSIGNMENT") {
-      return this._getNextToken("SIMPLE_ASSIGNMENT");
+      return this._eat("SIMPLE_ASSIGNMENT");
     }
 
-    return this._getNextToken("COMPLEX_ASSIGNMENT");
+    return this._eat("COMPLEX_ASSIGNMENT");
   }
 
   /**
@@ -171,7 +222,7 @@ class Parser {
     let left = this[builderName](); // call a function by name
 
     while (this._nextToken.type === operatorToken) {
-      const operator = this._getNextToken(operatorToken).value;
+      const operator = this._eat(operatorToken).value;
       const right = this[builderName]();
 
       left = {
@@ -210,9 +261,9 @@ class Parser {
    * ignore the () and get the expression inside the ()
    */
   ParenthesizedExpression() {
-    this._getNextToken("(");
+    this._eat("(");
     const expression = this.Expression();
-    this._getNextToken(")");
+    this._eat(")");
     return expression;
   }
 
@@ -235,7 +286,7 @@ class Parser {
   }
 
   StringLiteral() {
-    const token = this._getNextToken("STRING");
+    const token = this._eat("STRING");
     return {
       type: "StringLiteral",
       value: token.value.slice(1, -1), // avoid ""
@@ -243,7 +294,7 @@ class Parser {
   }
 
   NumericLiteral() {
-    const token = this._getNextToken("NUMBER");
+    const token = this._eat("NUMBER");
     return {
       type: "NumericLiteral",
       value: Number(token.value),
@@ -253,7 +304,7 @@ class Parser {
   /**
    * validate the lookahead token and move lookahead to the next token.
    */
-  _getNextToken(tokentype) {
+  _eat(tokentype) {
     const token = this._nextToken;
 
     if (token == null) {

@@ -18,6 +18,10 @@ const Spec = [
   [/^\}/, "}"],
   [/^\(/, "("],
   [/^\)/, ")"],
+  [/^\,/, ","],
+
+  // variable keywords
+  [/^\blet\b/, "let"],
 
   // literals numbers
   [/^\d+/, "NUMBER"],
