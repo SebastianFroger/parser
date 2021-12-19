@@ -7,6 +7,7 @@ const tests = [
   require("./empty-statement-test"),
   require("./assignment-test"),
   require("./variable-test"),
+  require("./if-test"),
   // require("./math-test"),
 ];
 

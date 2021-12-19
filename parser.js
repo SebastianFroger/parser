@@ -42,6 +42,8 @@ class Parser {
     switch (this._nextToken.type) {
       case ";":
         return this.EmptyStatement();
+      case "if":
+        return this.IfStatement();
       case "{":
         return this.BlockStatement();
       case "let":
@@ -55,6 +57,27 @@ class Parser {
     this._eat(";");
     return {
       type: "EmptyStatement",
+    };
+  }
+
+  IfStatement() {
+    this._eat("if");
+
+    this._eat("(");
+    const test = this.Expression();
+    this._eat(")");
+
+    const consequent = this.Statement();
+    const alternate =
+      this._nextToken != null && this._nextToken.type === "else"
+        ? this._eat("else") && this.Statement()
+        : null;
+
+    return {
+      type: "IfStatement",
+      test,
+      consequent,
+      alternate,
     };
   }
 
