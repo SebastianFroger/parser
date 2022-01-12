@@ -26,7 +26,7 @@ module.exports = (test) => {
   // nest binary expression
   // left 3 + 2
   // right 2
-  test(`3 - 2 + 2;`, {
+  test(`3 + 2 - 2;`, {
     type: "Program",
     body: [
       {
@@ -86,7 +86,7 @@ module.exports = (test) => {
           operator: "+",
           left: {
             type: "NumericLiteral",
-            value: 2,
+            value: 3,
           },
           right: {
             type: "BinaryExpression",
@@ -118,7 +118,7 @@ module.exports = (test) => {
             operator: "*",
             left: {
               type: "NumericLiteral",
-              value: 2,
+              value: 3,
             },
             right: {
               type: "NumericLiteral",
@@ -147,7 +147,7 @@ module.exports = (test) => {
             operator: "*",
             left: {
               type: "NumericLiteral",
-              value: 2,
+              value: 3,
             },
             right: {
               type: "NumericLiteral",

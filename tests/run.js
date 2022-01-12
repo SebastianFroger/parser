@@ -8,7 +8,7 @@ const tests = [
   require("./assignment-test"),
   require("./variable-test"),
   require("./if-test"),
-  // require("./math-test"),
+  require("./math-test"),
 ];
 
 const parser = new Parser();
